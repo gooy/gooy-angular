@@ -1,12 +1,13 @@
 import {logger} from './logger';
 import angular from 'angular';
+
+//these are here to make sure they are included in the bundling process (temporary solution)
 import "core-js";
+import "aurelia-html-template-element";
+import "scoped-polyfill";
 
 /**
  * Gooy Angular bootstrapper
- *
- *
- * https://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mixins/
  *
  * @module framework
  * @author Aaike Van Roekeghem <aaikevr@gmail.com>
