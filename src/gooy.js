@@ -120,10 +120,10 @@ export class Gooy {
     if (typeof Components !== Array) Components = [Components];
 
     for (var i = 0, l = Components.length; i < l; i++) {
-      Gooy._registerComponent(mod, Components[i], options, metadataOverwrite);
+      this._registerComponent(mod, Components[i], options, metadataOverwrite);
     }
 
-    return Gooy;
+    return this;
   }
 
   static _registerComponent(mod, Component, options, metadataOverwrite) {
@@ -143,11 +143,11 @@ export class Gooy {
     if (Component.metadata) {
       var cmetadata = Component.metadata;
       if (typeof Component.metadata === "function") cmetadata = cmetadata();
-      Object.assign(metadata, cmetadata);
+      this.assign(metadata, cmetadata,true);
     }
 
     //apply optional overwrite of metadata
-    if (metadataOverwrite && typeof metadataOverwrite === "object") Object.assign(metadata, metadataOverwrite);
+    if (metadataOverwrite && typeof metadataOverwrite === "object") this.assign(metadata, metadataOverwrite, true);
 
     // assemble angular component arguments
     // pass the user defined injects to angular and let it take care or the DI
@@ -279,6 +279,25 @@ export class Gooy {
         };
       }]);
     return mod;
+  }
+
+  /**
+   * Copy properties from one object to another
+   * does not overwrite existing properties by default.
+   *
+   * @param target Object       target object to assign properties to
+   * @param source Object       source object to copy properties from
+   * @param overwrite Boolean   overwrite existing properties (true|false)
+   * @returns Object
+   */
+  static assign(target,source,overwrite){
+    for (var key in source) {
+      if (!source.hasOwnProperty(key)) continue;
+      //skip already existing if overwrite is not set to true
+      if (!overwrite && target.hasOwnProperty(key)) continue;
+      target[key] = source[key];
+    }
+    return target;
   }
 
 }
