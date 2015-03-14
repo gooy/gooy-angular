@@ -135,7 +135,7 @@ export class Gooy {
 
     var metadata = {type: "controller"};
     //DI properties that will be injected into the constructor
-    var inject = [], rawInject = [], protoInject = [];
+    var inject = [], rawInject = [];
 
     //get inject definitions from the component class
     if (Component.inject && typeof Component.inject === "function") inject = inject.concat(Component.inject());
@@ -183,8 +183,8 @@ export class Gooy {
           }
           break;
         default:
-          //
-          let inst = new Component(...injects);
+          let inst = Object.create(Component.prototype);
+          inst.constructor.apply(inst,injects);
           break;
 
       }
@@ -209,7 +209,8 @@ export class Gooy {
       var l, i;
 
       //create new instance for every link
-      let inst = new Component(...options.injects);
+      let inst = Object.create(Component.prototype);
+      inst.constructor.apply(inst,options.injects);
       inst.scope = scope;
       inst.element = element;
       inst.attr = attr;
@@ -221,14 +222,16 @@ export class Gooy {
 
       // --------- Setup model watches from metadata
 
+      let prop;
       if (metadata.scope && typeof metadata.scope === "object")
-        for (let prop in metadata.scope) {
+
+        for (prop in metadata.scope) {
           if (!metadata.scope.hasOwnProperty(prop)) continue;
           Gooy.setupBinding(inst, scope, prop, metadata.scope[prop]);
         }
 
       if (metadata.watch && typeof metadata.watch === "object")
-        for (let prop in metadata.watch) {
+        for (prop in metadata.watch) {
           if (!metadata.watch.hasOwnProperty(prop)) continue;
           Gooy.setupBinding(inst, scope, prop, metadata.watch[prop]);
         }
