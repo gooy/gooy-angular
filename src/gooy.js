@@ -168,7 +168,7 @@ export class Gooy {
           for (var i = 0, l = methods.length; i < l; i++) {
             var m = methods[i];
             if (metadata[m] && metadata[m].substr(0, 5) === "this.") {
-              Gooy.setupMetaFunction(Component, metadata, {
+              Gooy.setupMetaFunction(Component, m,metadata, {
                 name: metadata[m].substr(5),
                 injects: injects,
                 rawInject: rawInject,
@@ -197,17 +197,18 @@ export class Gooy {
     if (component.bind) component.bind();
   }
 
-  static setupMetaFunction(Component, metadata, options) {
+  static setupMetaFunction(Component, name,metadata, options) {
 
-    metadata[options.name] = function (scope, element, attr, ctrl, $transclude) {
+    metadata[name] = function (scope, element, attr, ctrl, $transclude) {
       //logger.verbose(`new ${metadata.type} instance "${metadata.id}"`);
       var l, i;
 
-      //create new instance for every link
+      //create new instance
       let inst = Object.create(Component.prototype);
       inst.constructor.apply(inst,options.injects);
       inst.scope = scope;
-      inst.element = element;
+      inst.element = element[0];
+      inst.$element = element;
       inst.attr = attr;
       inst.ctrl = ctrl;
       inst.$transclude = $transclude;
