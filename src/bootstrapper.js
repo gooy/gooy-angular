@@ -58,8 +58,9 @@ export class Bootstrapper {
    */
   handleMain(mainHost) {
     var mainModuleId = mainHost.getAttribute('gooy-main') || 'main';
+    var deps = mainHost.getAttribute('gooy-deps') || [];
     return System.import(mainModuleId).then(m => {
-      var framework = new Gooy(mainHost,mainModuleId);
+      var framework = new Gooy(mainHost,mainModuleId,deps);
       return this.configure(framework).then(() => {
         if(m.configure===undefined) throw new Error(`Tried to use "${mainModuleId}" as a framework configurator module: no "configure" function found`);
         return m.configure(framework);

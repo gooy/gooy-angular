@@ -13,6 +13,7 @@ export class Gooy {
     this.moduleId = moduleId;
     this.deps = deps;
     this.element = element;
+    logger.debug(`creating main module ${moduleId} with deps: `,deps);
     this.mod = Gooy.createModule(moduleId, deps);
   }
 
@@ -213,7 +214,7 @@ export class Gooy {
       inst.ctrl = ctrl;
       inst.$transclude = $transclude;
 
-      //store reference the the component with the element
+      //store reference to the component with the element
       element[0].component = inst;
 
       // --------- Setup model watches from metadata
